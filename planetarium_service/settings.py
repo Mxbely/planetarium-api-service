@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+
 from datetime import timedelta
 from pathlib import Path
 
@@ -36,13 +37,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "rest_framework",
     "drf_spectacular",
     "rest_framework_simplejwt",
-
     "accounts",
     "planetarium",
+    "base"
 ]
 
 MIDDLEWARE = [
@@ -127,7 +127,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "accounts.User"
 
-INTERNAL_IPS = ["127.0.0.1", ]
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
