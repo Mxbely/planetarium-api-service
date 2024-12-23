@@ -23,4 +23,5 @@ urlpatterns = [
     path("api/planetarium/", include("planetarium.urls"), name="planetarium"),
     path("api/accounts/", include("accounts.urls"), name="accounts"),
     path("api-auth/", include("rest_framework.urls")),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
