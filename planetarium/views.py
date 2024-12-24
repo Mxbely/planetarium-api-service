@@ -1,4 +1,7 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import viewsets, filters
+from django.utils.decorators import method_decorator
 
 from planetarium.models import (
     ShowTheme,
@@ -103,28 +106,9 @@ class TicketViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         if self.action == "list":
             return queryset.select_related(
-                "show_session",
                 "show_session__astronomy_show",
-                "reservation",
                 "reservation__user",
             )
-            # return queryset.select_related(
-            #     "show_session__astronomy_show",
-            #     "reservation__user"
-            # ).select_related(
-            #     "show_session__astronomy_show__show_theme",
-            # ).prefetch_related(
-            #     "show_session__planetarium_dome",
-            # )
-            # return self.queryset.select_related(
-            #     "show_session",  # ForeignKey до ShowSession
-            #     "show_session__astronomy_show",  # Зв'язок до AstronomyShow через ShowSession
-            #     "reservation",  # ForeignKey до Reservation
-            #     "reservation__user"  # Зв'язок до User через Reservation
-            # ).annotate(
-            #     astronomy_show_title=F("show_session__astronomy_show__title"),  # Анотоване поле для title
-            #     reservation_username=F("reservation__user__username")  # Анотоване поле для username
-            # )
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -132,3 +116,7 @@ class TicketViewSet(viewsets.ModelViewSet):
         if self.action == "retrieve":
             return TickerRetrieveSerializer
         return TicketSerializer
+
+    @method_decorator(cache_page(60 * 5, key_prefix="ticket_view"))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
