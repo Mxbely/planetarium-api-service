@@ -7,4 +7,4 @@ from planetarium.models import Ticket
 
 @receiver([post_delete, post_save], sender=Ticket)
 def invalidate_ticket_cache(sender, instance, **kwargs):
-    cache.delete("ticket_view")
+    cache.delete_pattern("ticket_view:*")

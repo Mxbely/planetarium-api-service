@@ -1,7 +1,6 @@
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework import viewsets, filters
-from django.utils.decorators import method_decorator
 
 from planetarium.models import (
     ShowTheme,
@@ -42,6 +41,7 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         if self.action in ["list", "retrieve"]:
             return queryset.prefetch_related("show_theme")
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -68,6 +68,7 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
             return queryset.prefetch_related(
                 "astronomy_show__show_theme", "planetarium_dome"
             )
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -100,15 +101,39 @@ class TicketViewSet(viewsets.ModelViewSet):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ["row", "seat", "reservation__user__email", "show_session__astronomy_show__title"]
+    search_fields = [
+        "row",
+        "seat",
+        "reservation__user__email",
+        "show_session__astronomy_show__title",
+    ]
+
+    @staticmethod
+    def _params_to_ints(self, query_string):
+        return [int(str_id) for str_id in query_string.split(",")]
 
     def get_queryset(self):
         queryset = self.queryset
+
+        title = self.request.query_params.get("title")
+        email = self.request.query_params.get("email")
+
+        if title:
+            queryset = queryset.filter(
+                show_session__astronomy_show__title__icontains=title
+            )
+
+        if email:
+            queryset = queryset.filter(
+                reservation__user__email__icontains=email
+            )
+
         if self.action == "list":
             return queryset.select_related(
                 "show_session__astronomy_show",
                 "reservation__user",
             )
+        return queryset.distinct()
 
     def get_serializer_class(self):
         if self.action == "list":
