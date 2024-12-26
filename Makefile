@@ -1,4 +1,4 @@
-.PHONY: test run migrate docker docker-test
+.PHONY: test run migrate docker docker-superuser docker-test
 
 test:
 	python manage.py test
@@ -12,6 +12,9 @@ migrate:
 
 docker:
 	docker-compose up --build
+
+docker-superuser:
+	docker-compose run app sh -c "python manage.py createsuperuser"
 
 docker-test:
 	docker-compose run app sh -c "python manage.py test"
