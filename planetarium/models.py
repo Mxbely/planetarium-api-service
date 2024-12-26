@@ -69,3 +69,6 @@ class Ticket(models.Model):
     class Meta:
         unique_together = ("row", "seat", "show_session")
         ordering = ["row", "seat"]
+
+    def __str__(self):
+        return f"{self.show_session.astronomy_show.title} - Row {self.row} Seat {self.seat}"

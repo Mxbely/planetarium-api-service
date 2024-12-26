@@ -14,24 +14,6 @@ services:
       - redis
     restart: always
 
-  # db:
-  #   image: postgres:16.0-alpine
-  #   restart: always
-  #   user: postgres
-  #   secrets:
-  #     - db-password
-  #   volumes:
-  #     - db-data:/var/lib/postgresql/data
-  #   environment:
-  #     - POSTGRES_DB=example
-  #     - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
-  #   expose:
-  #     - 5432
-  #   healthcheck:
-  #     test: [ "CMD", "pg_isready" ]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
   redis:
     image: redis:alpine
   
@@ -41,9 +23,3 @@ services:
       - "5540:5540"
     depends_on:
       - redis
-
-# volumes:
-#   db-data:
-# secrets:
-#   db-password:
-#     file: db/password.txt
