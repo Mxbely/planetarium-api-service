@@ -8,10 +8,10 @@ ticket reservations, and viewing information about astronomy shows, available do
 - Manage show themes.
 - View, create, update, and delete astronomy shows.
 - Manage planetarium domes (seats, halls, etc.).
-- Schedule astronomy show sessions.
+- Advanced caching using **Redis**.
 - Ticket reservation system for shows.
-- Authentication using JWT tokens.
-- API response caching for improved performance.
+- Authentication using **JWT tokens**.
+- Support for custom user model with `UUID` as the primary key.
 
 ## Prerequisites
 
@@ -20,6 +20,7 @@ Make sure you have the following tools installed on your system:
 - Docker and Docker Compose
 - Python 3.12+
 - Redis for caching
+- PostgreSQL
 
 ## Running the Project with Docker-Compose
 
@@ -43,7 +44,15 @@ Make sure you have the following tools installed on your system:
    docker-compose up --build
    ```
 
-4. The API will be available at: [http://localhost:8000](http://localhost:8000).
+4. All API caching is managed using **Redis**. Configure `REDIS_URL` in the `.env` file:
+
+``` env
+REDIS_URL=redis://redis:6379/0
+```
+
+Redis is automatically started via `docker-compose`.
+
+5. The API will be available at: [http://localhost:8000](http://localhost:8000).
 
 ### Docker-Compose Configuration
 
@@ -53,8 +62,8 @@ Make sure you have the following tools installed on your system:
 
 ### Database Management
 
-The project uses SQLite as the default database. You can modify the `settings.py` file to switch to PostgreSQL or
-another database of your choice.
+The project uses **PostgreSQL** as the database backend,
+configured automatically with `docker-compose.yaml`.
 
 ## User Management
 
@@ -98,10 +107,12 @@ make docker-test
 - Django Filters
 - Redis
 - drf-spectacular
+- django-debug-toolbar
+- psycopg2-binary
 - JWT (JSON Web Token)
 
 ## Future Enhancements
 
-- Add support for other databases (e.g., PostgreSQL).
-- Implement background tasks for booking management (e.g., Celery).
-- Introduce monitoring and logging for API requests (e.g., via Sentry).
+- Add Celery for background tasks like delayed booking confirmations.
+- Real-time WebSocket Updates
+- Payment Management
