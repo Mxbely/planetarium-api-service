@@ -1,11 +1,12 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
 from planetarium.models import (
-    ShowTheme,
     AstronomyShow,
     PlanetariumDome,
-    ShowSession,
     Reservation,
+    ShowSession,
+    ShowTheme,
     Ticket,
 )
 
@@ -71,6 +72,13 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = ["id", "row", "seat", "show_session", "reservation"]
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Ticket.objects.all(),
+                fields=["row", "seat", "show_session"],
+                message="This seat is already taken.",
+            )
+        ]
 
     def validate(self, data):
         row = data.get("row")
@@ -97,6 +105,13 @@ class TicketListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = ["id", "row", "seat", "user", "astronomy_show"]
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Ticket.objects.all(),
+                fields=["row", "seat", "show_session"],
+                message="This seat is already taken.",
+            )
+        ]
 
 
 class TickerRetrieveSerializer(TicketSerializer):

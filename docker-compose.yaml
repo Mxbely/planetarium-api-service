@@ -40,6 +40,12 @@ services:
       - "5432:5432"
     volumes:
       - my_db:$PGDATA
+    healthcheck:
+      test: curl --fail http://localhost:5432 || exit 1
+      interval: 40s
+      retries: 3
+      start_period: 30s
+      timeout: 30s
 
 volumes:
   my_db:

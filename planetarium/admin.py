@@ -1,13 +1,14 @@
 from django.contrib import admin
 
 from planetarium.models import (
-    ShowTheme,
     AstronomyShow,
     PlanetariumDome,
     Reservation,
     ShowSession,
+    ShowTheme,
     Ticket,
 )
+
 
 admin.site.register(ShowTheme)
 admin.site.register(AstronomyShow)

@@ -10,11 +10,13 @@ from rest_framework.test import APITestCase
 from planetarium.models import (
     AstronomyShow,
     PlanetariumDome,
-    ShowSession,
     Reservation,
-    Ticket, ShowTheme,
+    ShowSession,
+    ShowTheme,
+    Ticket,
 )
-from planetarium.serializers import TicketListSerializer, TickerRetrieveSerializer
+from planetarium.serializers import TickerRetrieveSerializer, TicketListSerializer
+
 
 TICKET_URL = reverse("planetarium:ticket-list")
 
